@@ -1,0 +1,25 @@
+   
+   
+-- why to use useCallback --
+
+   If you're handing a tool to someone, but you keep giving them a brand new copy every time 
+   — even when the old one still works 
+   — you're wasting effort and creating clutter.
+   useCallback ensures you're reusing the same tool, unless it's actually broken or outdated.
+
+
+-- useEffect and useLayoutEffect --
+
+ uselayout runs synchronously and useEffect with asynchronous
+ 1st will render uselayout and then useEffect
+ generally use uselayout for scroll or css style rendering quickly
+
+
+
+ nodejs exp = 2 years
+ react js = 4 years
+ next js = 1 years
+ typescript = 1 year
+
+
+ 

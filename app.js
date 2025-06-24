@@ -2,8 +2,11 @@ const express = require('express');
 const cors = require('cors');
 const app = express();
 const port = 3000;
+require('dotenv').config();
 
-const routes = require("./routes/mainRoutes");
+
+const routes = require("./routes/auth");
+const policyRoutes = require("./routes/policy")
 
 
 app.use(cors());
@@ -15,12 +18,8 @@ app.use((req,res,next)=>{
     
 })
 
-app.use("/api",routes);
-
-
-
-
-
+app.use("/",routes);
+app.use("/api",policyRoutes);
 
 
 app.listen(port,()=>{

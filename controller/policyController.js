@@ -43,7 +43,6 @@ exports.getTypes = async (req, res) => {
 exports.CalculatePolicyDetails = async (req, res) => {
 
   const { dob, premium, sumAssured, pt, ppt, frequency, policyType } = req.body;
-  console.log(pt, ppt, 'log');
 
   const { isValid, errors } = validateInputs({ dob, premium, sumAssured, pt, ppt, frequency });
 
@@ -57,6 +56,7 @@ exports.CalculatePolicyDetails = async (req, res) => {
   for (let year = 1; year <= pt; year++) {
     const pay = year <= ppt ? premium : 0;
     const bonusRate = 2.5 + (year % 3);
+    const isMaturityYear = year === Number(pt);
     const bonusAmount = (sumAssured * bonusRate) / 100;
     const totalBenefit = sumAssured + bonusAmount;
     const netCashflow = -pay;
@@ -64,22 +64,18 @@ exports.CalculatePolicyDetails = async (req, res) => {
     rows.push({
       policyYear: year,
       premium: pay,
-      sumAssured,
+      sumAssured:isMaturityYear ? sumAssured : 0,
       bonusRate: `${bonusRate.toFixed(2)}%`,
       bonusAmount,
-      totalBenefit,
+      totalBenefit:isMaturityYear ? totalBenefit : 0,
       netCashflow
     });
 
-    totalPremium += pay;
-    if (year === pt) maturityAmount = totalBenefit;
+    totalPremium += Number(pay);
+    if (isMaturityYear) {
+      maturityAmount = Number(totalBenefit)
+    };
   }
-
-  const illustration = {
-    totalPremium,
-    maturityAmount,
-    rows
-  };
 
   try {
     const [result] = await db.query(

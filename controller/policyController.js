@@ -58,7 +58,7 @@ exports.CalculatePolicyDetails = async (req, res) => {
     const bonusRate = 2.5 + (year % 3);
     const isMaturityYear = year === Number(pt);
     const bonusAmount = (sumAssured * bonusRate) / 100;
-    const totalBenefit = sumAssured + bonusAmount;
+    const totalBenefit = Number(sumAssured) + Number(bonusAmount);
     const netCashflow = -pay;
 
     rows.push({

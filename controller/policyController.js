@@ -51,30 +51,36 @@ exports.CalculatePolicyDetails = async (req, res) => {
 
   let totalPremium = 0;
   let maturityAmount = 0;
+  let totalBonusAmount = 0;
   const rows = [];
 
   for (let year = 1; year <= pt; year++) {
     const pay = year <= ppt ? premium : 0;
     const bonusRate = 2.5 + (year % 3);
     const isMaturityYear = year === Number(pt);
-    const bonusAmount = (sumAssured * bonusRate) / 100;
+    const bonusAmount = (Number(sumAssured) * Number(bonusRate)) / 100;
     const totalBenefit = Number(sumAssured) + Number(bonusAmount);
     const netCashflow = -pay;
 
-    rows.push({
+    totalPremium += Number(pay);
+    totalBonusAmount += bonusAmount;
+   const row = {
       policyYear: year,
       premium: pay,
       sumAssured:isMaturityYear ? sumAssured : 0,
       bonusRate: `${bonusRate.toFixed(2)}%`,
       bonusAmount,
-      totalBenefit:isMaturityYear ? totalBenefit : 0,
+      totalBenefit:isMaturityYear ? Number(sumAssured) + totalBonusAmount : 0,
       netCashflow
-    });
+    }
 
-    totalPremium += Number(pay);
-    if (isMaturityYear) {
-      maturityAmount = Number(totalBenefit)
+     if (isMaturityYear) {
+      maturityAmount = row.totalBenefit
     };
+
+
+    rows.push(row);
+
   }
 
   try {
